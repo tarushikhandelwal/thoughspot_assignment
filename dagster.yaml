@@ -1,0 +1,41 @@
+# dagster.yaml
+
+# The location of the pipeline definitions
+# This could point to a python file or a module
+python_modules:
+  - module: pipeline
+
+# Resources configuration for the pipeline
+resources:
+  sqlite_io_manager:
+    config:
+      database_uri: "news_portal.db"  # SQLite database file location
+     
+# For local execution, you might configure a default run environment
+execution:
+  config:
+    - executor: in_process  # Use in-process execution for local testing and development
+    - default_run_config:
+        storage:
+          - io_manager_key: sqlite_io_manager
+        tags: {}
+
+# You can configure the log level here
+loggers:
+  dagster:
+    level: DEBUG  # Adjust log level as needed (e.g., INFO, DEBUG, ERROR)
+
+# The default set of resources for Dagster's execution
+resources:
+  io_manager:
+    config:
+      database_uri: "news_portal.db"
+
+# The repository configuration (this is where the pipelines are defined)
+repository:
+  name: "news_portal_pipeline"
+  modules:
+    - pipeline  # Module containing your pipeline code
+  pipeline_selector:
+    - my_pipeline  # Replace this with the name of the pipeline to execute, or remove if you want all pipelines
+
